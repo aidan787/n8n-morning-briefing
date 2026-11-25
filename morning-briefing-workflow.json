@@ -1,0 +1,113 @@
+{
+  "name": "final project",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 7,
+              "triggerAtMinute": 30
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "26c1fd90-757f-4122-97f3-55f7e5b9478c",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "sendTo": "YOUR_EMAIL_HERE",
+        "subject": "Good Morning!",
+        "message": "=Good Morning! {{ $node[\"Get_Quote\"].json.q }}. The Weather In YOUR_CITY Today Is {{ $node[\"Get_Weather\"].json.main.temp }} and {{ $node[\"Get_Weather\"].json.weather[0].description }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        576,
+        0
+      ],
+      "id": "31e0c492-5ac4-4690-be29-fad0bb9c607e",
+      "name": "Send a message"
+    },
+    {
+      "parameters": {
+        "url": "https://zenquotes.io/api/random",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        176,
+        0
+      ],
+      "id": "b9b06e4e-7d67-40b6-bcfa-5ffc6f522b90",
+      "name": "Get_Quote"
+    },
+    {
+      "parameters": {
+        "url": "https://api.openweathermap.org/data/2.5/weather?q=YOUR_CITY,US&appid=YOUR_OPENWEATHERMAP_API_KEY&units=imperial",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        352,
+        0
+      ],
+      "id": "e08e2c24-2107-4907-9c97-450fe8a7be41",
+      "name": "Get_Weather"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get_Quote",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get_Quote": {
+      "main": [
+        [
+          {
+            "node": "Get_Weather",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get_Weather": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "nodeGroups": [],
+  "tags": []
+}
